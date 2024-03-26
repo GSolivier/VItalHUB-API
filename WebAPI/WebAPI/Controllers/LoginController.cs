@@ -33,7 +33,7 @@ namespace WebAPI.Controllers
                 if (usuarioBuscado == null)
                 {
                     //retorna 401 - sem autorização
-                    return StatusCode(401, new { status = 401, message = "Email ou senha inválidos!"});
+                    return StatusCode(401, new { status = 401, message = "Email ou senha inválidos!" });
                 }
 
 
