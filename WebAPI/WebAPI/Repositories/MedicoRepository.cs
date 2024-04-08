@@ -115,6 +115,7 @@ namespace WebAPI.Repositories
                 .Include(x => x.Situacao)
                 .Include(x => x.Prioridade)
                 .Include(x => x.Receita)
+                .Include(x => x.MedicoClinica!.Clinica!.Endereco)
                 .Include(x => x.Paciente!.IdNavigation)
                 .Include(x => x.MedicoClinica!.Medico!.IdNavigation)
                 .Include(x => x.MedicoClinica!.Medico!.Especialidade)

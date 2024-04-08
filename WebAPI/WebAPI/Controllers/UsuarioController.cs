@@ -33,7 +33,13 @@ namespace WebAPI.Controllers
             return Ok();
         }
 
-        
+        [HttpGet("BuscarPorID")]
+        public IActionResult GetById(Guid id)
+        {
+            return Ok(usuarioRepository.BuscarPorId(id));
+        }
+
+
 
     }
 }
