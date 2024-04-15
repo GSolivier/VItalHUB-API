@@ -16,6 +16,6 @@ namespace WebAPI.ViewModels
         public int? Numero { get; set; }
         public string? Cidade { get; set; }
         public Guid IdTipoUsuario { get; set; }
-        public string? Foto { get; set; }
+        public IFormFile? Arquivo { get; set; }
     }
 }
