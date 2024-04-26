@@ -61,22 +61,9 @@ namespace WebAPI.Controllers
         {
             try
             {
-                Consulta consulta = new Consulta();
+                consultaRepository.Cadastrar(consultaViewModel);
 
-                consulta.SituacaoId = consultaViewModel.SituacaoId;
-                consulta.PacienteId = consultaViewModel.PacienteId;
-                consulta.MedicoClinicaId = consultaViewModel.MedicoClinicaId;
-
-                consulta.Receita = new Receita();
-
-                consulta.PrioridadeId = consultaViewModel.PrioridadeId;
-                consulta.DataConsulta = consultaViewModel.DataConsulta;
-                consulta.Descricao = consultaViewModel.Descricao;
-                consulta.Diagnostico = consultaViewModel.Diagnostico;
-
-                consultaRepository.Cadastrar(consulta);
-
-                return StatusCode(201, consulta);
+                return StatusCode(201);
             }
             catch (Exception ex)
             {

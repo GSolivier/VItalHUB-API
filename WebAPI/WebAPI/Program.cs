@@ -120,6 +120,8 @@ builder.Services.AddScoped<OcrService>();
 
 builder.Services.AddScoped<IExameRepository, ExameRepository>();
 
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
 // CORS
 builder.Services.AddCors(options =>
 {

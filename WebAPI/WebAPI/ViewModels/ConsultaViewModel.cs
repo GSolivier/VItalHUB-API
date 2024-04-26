@@ -2,15 +2,15 @@
 {
     public class ConsultaViewModel
     {
-        public Guid? SituacaoId { get; set; }
-
         public Guid? PacienteId { get; set; }
 
-        public Guid? MedicoClinicaId { get; set; }
+        public Guid? ClinicaId { get; set; }
+
+        public Guid? MedicoId {get; set;}
 
         public Guid? ReceitaId { get; set; }
 
-        public Guid? PrioridadeId { get; set; }
+        public int PrioridadeTipo { get; set; }
 
         public DateTime? DataConsulta { get; set; }
 

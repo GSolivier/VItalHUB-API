@@ -18,10 +18,15 @@ namespace WebAPI.Controllers
         private IPacienteRepository pacienteRepository { get; set; }
         private EmailSendingService _emailSendingService { get; set; }
 
-        public PacientesController(EmailSendingService emailSendingService)
+        private readonly string _blobStorageConnectionString;
+        private readonly string _blobStorageContainerName;
+
+        public PacientesController(EmailSendingService emailSendingService, IConfiguration configuration)
         {
             pacienteRepository = new PacienteRepository();
             _emailSendingService = emailSendingService;
+            _blobStorageConnectionString = configuration["AzureBlobStorageConnectionString"]!;
+            _blobStorageContainerName = configuration["AzureBlobStorageContainerName"]!;
         }
 
         [HttpGet("PerfilLogado")]
@@ -55,9 +60,9 @@ namespace WebAPI.Controllers
             user.Nome = pacienteModel.Nome;
             user.Email = pacienteModel.Email;
             user.TipoUsuarioId = pacienteModel.IdTipoUsuario;
-            var connectionString = "";
+            var connectionString = _blobStorageConnectionString;
 
-            var containerName = "blobvitalhubg07";
+            var containerName = _blobStorageContainerName;
 
             user.Foto = await AzureBlobStorageHelper.UploadImageBlobAsync(pacienteModel.Arquivo!, connectionString, containerName);
             user.Senha = pacienteModel.Senha;

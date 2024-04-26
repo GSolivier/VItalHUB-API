@@ -4,6 +4,7 @@ using Microsoft.Identity.Client;
 using WebAPI.Contexts;
 using WebAPI.Domains;
 using WebAPI.Interfaces;
+using WebAPI.ViewModels;
 
 namespace WebAPI.Repositories
 {
@@ -34,9 +35,31 @@ namespace WebAPI.Repositories
         }
 
 
-        public void Cadastrar(Consulta clinica)
+        public void Cadastrar(ConsultaViewModel consulta)
         {
-            ctx.Consultas.Add(clinica);
+
+            Consulta novaConsulta = new Consulta();
+
+            novaConsulta.PacienteId = consulta.PacienteId;
+
+            novaConsulta.Receita = new Receita();
+
+            var medicoClinica = ctx.MedicosClinicas.FirstOrDefault(x => x.ClinicaId == consulta.ClinicaId && x.MedicoId == consulta.MedicoId);
+
+            novaConsulta.MedicoClinicaId = medicoClinica!.Id;
+            novaConsulta.DataConsulta = consulta.DataConsulta;
+            novaConsulta.Descricao = consulta.Descricao;
+            novaConsulta.Diagnostico = consulta.Diagnostico;
+
+            var situacao = ctx.Situacoes.FirstOrDefault(x => x.Situacao == "agendada");
+
+            novaConsulta.SituacaoId = situacao!.Id;
+
+            var prioridadeEncontrada = ctx.NiveisPrioridades.FirstOrDefault(x => x.Prioridade == consulta.PrioridadeTipo);
+
+            novaConsulta.PrioridadeId = prioridadeEncontrada?.Id;
+
+            ctx.Consultas.Add(novaConsulta);
             ctx.SaveChanges();
         }
 
@@ -48,16 +71,6 @@ namespace WebAPI.Repositories
 
                 buscada.Descricao = consulta.Descricao;
                 buscada.Diagnostico = consulta.Diagnostico;
-
-                if (buscada.ReceitaId != null)
-                {
-                    buscada.Receita = consulta.Receita;
-
-                }
-                else
-                {
-                    ctx.Add(consulta.Receita);
-                }
 
                 ctx.Update(buscada);
                 ctx.SaveChanges();

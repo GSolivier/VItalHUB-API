@@ -15,9 +15,13 @@ namespace WebAPI.Controllers
     public class MedicosController : ControllerBase
     {
         private IMedicoRepository _medicoRepository;
-        public MedicosController()
+        private readonly string _blobStorageConnectionString;
+        private readonly string _blobStorageContainerName;
+        public MedicosController(IConfiguration configuration)
         {
             _medicoRepository = new MedicoRepository();
+            _blobStorageConnectionString = configuration["AzureBlobStorageConnectionString"]!;
+            _blobStorageContainerName = configuration["AzureBlobStorageContainerName"]!;
         }
 
         [HttpGet]
@@ -53,9 +57,9 @@ namespace WebAPI.Controllers
             user.Nome = medicoModel.Nome;
             user.Email = medicoModel.Email;
             user.TipoUsuarioId = medicoModel.IdTipoUsuario;
-            var connectionString = "";
+            var connectionString = _blobStorageConnectionString;
 
-            var containerName = "blobvitalhubg07";
+            var containerName = _blobStorageContainerName;
 
             user.Foto = await AzureBlobStorageHelper.UploadImageBlobAsync(medicoModel.Arquivo!, connectionString, containerName);
             user.Senha = medicoModel.Senha;
