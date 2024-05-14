@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using System.Text;
 using WebAPI.Contexts;
 using WebAPI.Domains;
 using WebAPI.Interfaces;
@@ -40,16 +42,34 @@ namespace WebAPI.Repositories
 
         public List<Clinica> ListarPorCidade(string cidade)
         {
-            return ctx.Clinicas
-                .Select(c => new Clinica
-                {
-                    Id = c.Id,
-                    NomeFantasia = c.NomeFantasia,
-                    Endereco = c.Endereco
-                })
-                
-               .Where(c => c.Endereco!.Cidade == cidade)
+            cidade = RemoverAcentos(cidade);
+
+            var clinicas = ctx.Clinicas
+                .Include(c => c.Endereco)
                 .ToList();
+
+            var clinicasFiltradas = clinicas
+                .Where(c => RemoverAcentos(c.Endereco.Cidade).IndexOf(cidade, StringComparison.OrdinalIgnoreCase) >= 0)
+                .ToList();
+
+            return clinicasFiltradas;
+        }
+
+        private static string RemoverAcentos(string texto)
+        {
+            var normalizedString = texto.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }
